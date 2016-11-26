@@ -78,6 +78,8 @@ def translate_raw_scenario(raw, old=False):
             keys = [x[2:-2] for x in re.findall(keys_re, passage.text)]
             imgs_re = r"\(open-url:\s*\"[^\(\)]*\"\s*\)"
             imgs = [x[12:-2] for x in re.findall(imgs_re, passage.text)]
+            action_re = r"\(action:\s*\"[^\(\)]*\"\s*\)"
+            actions = [x[10:-2] for x in re.findall(action_re, passage.text)]
 
             # Remove used matches
             text = re.sub(keys_re, "", text)
@@ -112,6 +114,8 @@ def translate_raw_scenario(raw, old=False):
         tr = etree.Element('transition')
         tr.attrib['input'] = "*"
         tr.attrib['next'] = state_menu_name
+        for action in actions:
+            tr.attrib['action'] = action
         tr.attrib["pending_keyboard"] = ','.join([x.split(":")[1] if ":" in x else x for x in keys])
         tr.text = text
         state_intro.append(tr)

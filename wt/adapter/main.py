@@ -27,7 +27,7 @@ def start_bot():
     session_id = new_session("eced7582-4acd-46ec-9c78-42df56175dc1", player_id)
     # Устанавливает
     # Обнуляет параметры(?)
-    return 'success', 200
+    return session_id, 200
 
 
 @route(bp, '/good', methods=['GET'])
