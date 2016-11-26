@@ -1,0 +1,5 @@
+from werkzeug.wsgi import DispatcherMiddleware
+from wt import dashboard
+
+application = DispatcherMiddleware(dashboard.create_app(config_name="production")
+})
