@@ -49,7 +49,7 @@ def get_state_menu_name(s):
     return get_state_name(s, "Menu")
 
 
-def translate_raw_scenario(raw):
+def translate_raw_scenario(raw, old=False):
     root = html.fromstring(raw)
 
     res_xml = etree.Element('states')
@@ -62,19 +62,29 @@ def translate_raw_scenario(raw):
 
     res_xml.append(start_state)
 
-    for passage in root.findall("tw-passagedata"):
-        name = passage.attrib["name"]
+    if not old:
+        passages = root.findall("tw-passagedata")
+    else:
+        r = root.findall("body/div[@id='storeArea']")
+        passages = r[0].getchildren()
+
+    for passage in passages:
+        name = passage.attrib["name"] if not old else passage.attrib["tiddler"]
         text = passage.text
 
         # Find special data
-        keys_re = r"\[\[[^\[\]]*\]\]"
-        keys = [x[2:-2] for x in re.findall(keys_re, passage.text)]
-        imgs_re = r"\(open-url:\s*\"[^\(\)]*\"\s*\)"
-        imgs = [x[12:-2] for x in re.findall(imgs_re, passage.text)]
+        if text:
+            keys_re = r"\[\[[^\[\]]*\]\]"
+            keys = [x[2:-2] for x in re.findall(keys_re, passage.text)]
+            imgs_re = r"\(open-url:\s*\"[^\(\)]*\"\s*\)"
+            imgs = [x[12:-2] for x in re.findall(imgs_re, passage.text)]
 
-        # Remove used matches
-        text = re.sub(keys_re, "", text)
-        text = re.sub(imgs_re, "", text)
+            # Remove used matches
+            text = re.sub(keys_re, "", text)
+            text = re.sub(imgs_re, "", text)
+
+            # Format newlines
+            text = text.replace("\n", "\n\n")
 
         # Prepare states' names
         state_intro = etree.Element('state')
