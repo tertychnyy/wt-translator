@@ -69,8 +69,8 @@ def translate_raw_scenario(raw):
         # Find special data
         keys_re = r"\[\[[^\[\]]*\]\]"
         keys = [x[2:-2] for x in re.findall(keys_re, passage.text)]
-        imgs_re = r"\(open-url: .*\)"
-        imgs = [x[10:] for x in re.findall(imgs_re, passage.text)]
+        imgs_re = r"\(open-url:\s*\"[^\(\)]*\"\s*\)"
+        imgs = [x[12:-2] for x in re.findall(imgs_re, passage.text)]
 
         # Remove used matches
         text = re.sub(keys_re, "", text)
