@@ -4,6 +4,7 @@ import traceback
 
 from flask import make_response
 from flask import jsonify
+from flask import render_template
 
 from wt import factory
 from wt.core import log, InvalidUsage
@@ -32,6 +33,24 @@ def handle_error(e):
 
 
 def route(bp, *args, **kwargs):
+    kwargs.setdefault('strict_slashes', False)
+
+    def decorator(f):
+        @bp.route(*args, **kwargs)
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            sc = 200
+            rv = f(*args, **kwargs)
+            if isinstance(rv, tuple):
+                sc = rv[1]
+                rv = rv[0]
+            return make_response(render_template(rv), sc)
+        return f
+
+    return decorator
+
+
+def route_test(bp, *args, **kwargs):
     kwargs.setdefault('strict_slashes', False)
 
     def decorator(f):
