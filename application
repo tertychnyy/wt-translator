@@ -6,7 +6,9 @@ sys.path.append(os.path.expanduser('~'))
 sys.path.append(os.path.expanduser('~') + '/ROOT/')
 
 from werkzeug.wsgi import DispatcherMiddleware
-from wt import dashboard
+from wt import dashboard, adapter
 
-application = DispatcherMiddleware(dashboard.create_app(config_name="production")
+application = DispatcherMiddleware(dashboard.create_app(config_name="production"), {
+    "/go": adapter.create_app(config_name="production")
+}
 )
