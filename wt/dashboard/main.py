@@ -29,7 +29,7 @@ def main_page_upload():
 
     create_bot(scenario)
 
-    return 'dashboard/help.html', 200
+    return 'dashboard/success.html', 200
 
 
 @route(bp, '/help', methods=['GET'])
