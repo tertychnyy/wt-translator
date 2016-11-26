@@ -17,3 +17,8 @@ def get_status():
 @route(bp, '/', methods=['GET'])
 def main_page():
     return 'dashboard/main.html', 200
+
+
+@route(bp, '/help', methods=['GET'])
+def help_page():
+    return 'dashboard/help.html', 200

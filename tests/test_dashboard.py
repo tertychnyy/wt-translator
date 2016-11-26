@@ -18,9 +18,14 @@ class TestScraper(unittest.TestCase):
         rv = self.client.get('/test')
         self.assertEqual(json.loads(rv.data), expected)
 
-    def test_view(self):
+    def test_main_view(self):
         rv = self.client.get('/')
         self.assertTrue(b'Main page' in rv.data)
+
+    def test_help_view(self):
+        rv = self.client.get('/help')
+        self.assertTrue(b'Help' in rv.data)
+
 
 if __name__ == '__main__':
     unittest.main()
