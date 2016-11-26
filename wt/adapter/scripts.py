@@ -1,5 +1,7 @@
 import requests
 
+from wt.core import InvalidUsage
+
 
 def check_user(id_, channel):
     """
@@ -14,9 +16,13 @@ def check_user(id_, channel):
     params["uid"] = id_
 
     res = requests.get(url, params=params)
-    data = res.json()
-
-    return data["id"]
+    if not res.status_code == 200:
+        raise InvalidUsage("Bad https://walkie-talkie-api.herokuapp.com/players/create response: bad error code")
+    try:
+        data = res.json()
+        return data["id"]
+    except:
+        raise InvalidUsage("Bad https://walkie-talkie-api.herokuapp.com/players/create response: cannot parse json")
 
 
 def new_session(game_id, player_id):
@@ -31,6 +37,11 @@ def new_session(game_id, player_id):
     params["player_id"] = player_id
 
     res = requests.get(url, params=params)
-    data = res.json()
+    if not res.status_code == 200:
+        raise InvalidUsage("Bad https://walkie-talkie-api.herokuapp.com/games/{game_id}/start response: bad error code")
+    try:
+        data = res.json()
+        return data["id"]
+    except:
+        raise InvalidUsage("Bad https://walkie-talkie-api.herokuapp.com/games/{game_id}/start response: cannot parse json")
 
-    return data["id"]
