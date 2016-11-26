@@ -102,7 +102,7 @@ def translate_raw_scenario(raw):
         tr = etree.Element('transition')
         tr.attrib['input'] = "*"
         tr.attrib['next'] = state_menu_name
-        tr.attrib["pending_keyboard"] = ','.join(keys)
+        tr.attrib["pending_keyboard"] = ','.join([x.split(":")[1] if ":" in x else x for x in keys])
         tr.text = text
         state_intro.append(tr)
 
@@ -110,7 +110,7 @@ def translate_raw_scenario(raw):
         for key in keys:
             tr = etree.Element('transition')
             tr.attrib["no_stop"] = "true"
-            tr.attrib["input"] = key
+            tr.attrib["input"] = key.split(":")[1] if ":" in key else key
             tr.attrib["next"] = get_state_intro_name(key)
             state_menu.append(tr)
 
