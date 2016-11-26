@@ -14,6 +14,8 @@ class Config(object):
     else:
         LOGENTRIES_TOKEN = None
 
+    CHATFIRST_TOKEN = os.getenv("CHATFIRST_TOKEN", None)
+
 
 
 class DevelopmentConfig(Config):
