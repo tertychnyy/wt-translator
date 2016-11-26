@@ -3,6 +3,7 @@ import json
 import unittest
 
 from wt import dashboard
+from wt.scripts import create_bot
 
 
 class TestScraper(unittest.TestCase):

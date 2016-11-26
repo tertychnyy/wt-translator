@@ -46,5 +46,4 @@ def create_bot(scenario):
     bot.scenario = '<fsm name="{name}">'.format(name=bot.name) + scenario + '</fsm>'
 
     client = Chatfirst(token=current_app.config["CHATFIRST_TOKEN"])
-    print bot.to_json()
     return client.bots_update(bot)
