@@ -1,3 +1,10 @@
+#!/usr/bin/python
+
+import os,sys
+
+sys.path.append(os.path.expanduser('~'))
+sys.path.append(os.path.expanduser('~') + '/ROOT/')
+
 from werkzeug.wsgi import DispatcherMiddleware
 from wt import dashboard
 
