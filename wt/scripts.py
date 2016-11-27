@@ -72,10 +72,14 @@ def translate_raw_scenario(raw, old=False):
         name = passage.attrib["name"] if not old else passage.attrib["tiddler"]
         text = passage.text
 
+        actions = list()
+        keys = list()
+
         # Find special data
         if text:
             keys_re = r"\[\[[^\[\]]*\]\]"
             keys = [x[2:-2] for x in re.findall(keys_re, passage.text)]
+            keys = [x.split("|")[1] if "|" in x else x for x in keys]
             imgs_re = r"\(open-url:\s*\"[^\(\)]*\"\s*\)"
             imgs = re.findall(imgs_re, passage.text)
             action_re = r"\(action:\s*\"[^\(\)]*\"\s*\)"
@@ -139,11 +143,11 @@ def translate_raw_scenario(raw, old=False):
     return res
 
 
-def create_bot(scenario):
+def create_bot(scenario, name):
     bot = Bot()
     bot.name = "Junction2016"
     bot.language = 1
-    bot.fancy_name = "Junction2016"
+    bot.fancy_name = name
 
     bot.scenario = '<fsm name="{name}">'.format(name=bot.name) + scenario + '</fsm>'
 

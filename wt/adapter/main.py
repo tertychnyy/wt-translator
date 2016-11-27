@@ -37,7 +37,6 @@ def good_bot():
     # Регистрирует игрока
     player_id = check_user(id_, "skype")
 
-
     return 'success', 200
 
 

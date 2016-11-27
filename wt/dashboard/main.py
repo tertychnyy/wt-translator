@@ -27,7 +27,7 @@ def main_page_upload():
 
     scenario = translate_raw_scenario(raw_scenario)
 
-    create_bot(scenario)
+    create_bot(scenario, "Junction2016HR")
 
     return 'dashboard/success.html', 200
 
@@ -38,7 +38,7 @@ def main_page_upload_old():
 
     scenario = translate_raw_scenario(raw_scenario, old=True)
 
-    create_bot(scenario)
+    create_bot(scenario, "Junction2016")
 
     return 'dashboard/success.html', 200
 
