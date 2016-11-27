@@ -145,7 +145,7 @@ def translate_raw_scenario(raw, old=False):
 
 def create_bot(scenario, name):
     bot = Bot()
-    bot.name = "Junction2016"
+    bot.name = name
     bot.language = 1
     bot.fancy_name = name
 
