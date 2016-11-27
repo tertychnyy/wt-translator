@@ -77,16 +77,22 @@ def translate_raw_scenario(raw, old=False):
             keys_re = r"\[\[[^\[\]]*\]\]"
             keys = [x[2:-2] for x in re.findall(keys_re, passage.text)]
             imgs_re = r"\(open-url:\s*\"[^\(\)]*\"\s*\)"
-            imgs = [x[12:-2] for x in re.findall(imgs_re, passage.text)]
+            imgs = re.findall(imgs_re, passage.text)
             action_re = r"\(action:\s*\"[^\(\)]*\"\s*\)"
             actions = [x[10:-2] for x in re.findall(action_re, passage.text)]
 
             # Remove used matches
             text = re.sub(keys_re, "", text)
             text = re.sub(imgs_re, "", text)
+            text = re.sub(action_re, "", text)
 
             # Format newlines
             text = text.replace("\n", "\n\n")
+
+            # Process imgs
+            for img in imgs:
+                # [12:-2]
+                text = text.replace(img, " ===" + img[12:-2] + "=== ")
 
         # Prepare states' names
         state_intro = etree.Element('state')
@@ -100,11 +106,6 @@ def translate_raw_scenario(raw, old=False):
             start_tr.attrib['next'] = state_intro_name
             start_tr.attrib['no_stop'] = 'true'
             start_tr.text = ""
-
-
-        # Process imgs
-        for img in imgs:
-            text += " ===" + img + "=== "
 
         # Prepare states
         state_intro.attrib['name'] = state_intro_name

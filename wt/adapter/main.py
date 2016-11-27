@@ -33,6 +33,11 @@ def start_bot():
 @route(bp, '/good', methods=['GET'])
 def good_bot():
     id_ = request.args.get('id', None)
+
+    # Регистрирует игрока
+    player_id = check_user(id_, "skype")
+
+
     return 'success', 200
 
 

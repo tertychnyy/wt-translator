@@ -17,7 +17,6 @@ class Config(object):
     CHATFIRST_TOKEN = os.getenv("CHATFIRST_TOKEN", None)
 
 
-
 class DevelopmentConfig(Config):
     DEBUG = True
 
