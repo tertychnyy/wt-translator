@@ -132,7 +132,6 @@ def translate_raw_scenario(raw, old=False):
 
         # Process *
         tr = etree.Element('transition')
-        tr.attrib["no_stop"] = "true"
         tr.attrib["input"] = "*"
         tr.attrib["next"] = state_menu_name
         tr.text = "Please, use buttons"
