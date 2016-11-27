@@ -37,10 +37,10 @@ def good_bot():
     # Регистрирует игрока
     player_id = check_user(id_, "skype")
 
-    return 'success', 200
+    return "*Session status saved: Success*", 200
 
 
 @route(bp, '/bad', methods=['GET'])
 def bad_bot():
     id_ = request.args.get('id', None)
-    return 'success', 200
+    return "*Session status saved: Fail*", 200

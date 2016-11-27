@@ -87,16 +87,13 @@ def translate_raw_scenario(raw, old=False):
 
             # Remove used matches
             text = re.sub(keys_re, "", text)
-            text = re.sub(imgs_re, "", text)
             text = re.sub(action_re, "", text)
-
-            # Format newlines
-            text = text.replace("\n", "\n\n")
-
-            # Process imgs
             for img in imgs:
                 # [12:-2]
                 text = text.replace(img, " ===" + img[12:-2] + "=== ")
+
+            # Format newlines
+            text = text.replace("\n", "\n\n")
 
         # Prepare states' names
         state_intro = etree.Element('state')
@@ -132,6 +129,14 @@ def translate_raw_scenario(raw, old=False):
             tr.attrib["input"] = key.split(":")[1] if ":" in key else key
             tr.attrib["next"] = get_state_intro_name(key)
             state_menu.append(tr)
+
+        # Process *
+        tr = etree.Element('transition')
+        tr.attrib["no_stop"] = "true"
+        tr.attrib["input"] = "*"
+        tr.attrib["next"] = state_menu_name
+        tr.text = "Please, use buttons"
+        state_menu.append(tr)
 
         res_xml.append(state_intro)
         res_xml.append(state_menu)
