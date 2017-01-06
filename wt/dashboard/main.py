@@ -26,8 +26,8 @@ def main_page_upload():
     raw_scenario = read_scenarion_file(request)
 
     scenario = translate_raw_scenario(raw_scenario)
-
-    create_bot(scenario, "Junction2016HR")
+    print scenario
+    #create_bot(scenario, "Junction2016HR")
 
     return 'dashboard/success.html', 200
 

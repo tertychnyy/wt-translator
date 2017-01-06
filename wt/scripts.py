@@ -63,7 +63,7 @@ def translate_raw_scenario(raw, old=False):
     res_xml.append(start_state)
 
     if not old:
-        passages = root.findall("tw-passagedata")
+        passages = root.findall(".//tw-passagedata")
     else:
         r = root.findall("body/div[@id='storeArea']")
         passages = r[0].getchildren()
@@ -79,7 +79,7 @@ def translate_raw_scenario(raw, old=False):
         if text:
             keys_re = r"\[\[[^\[\]]*\]\]"
             keys = [x[2:-2] for x in re.findall(keys_re, passage.text)]
-            keys = [x.split("|")[1] if "|" in x else x for x in keys]
+            keys = [x.split("->") for x in keys]
             imgs_re = r"\(open-url:\s*\"[^\(\)]*\"\s*\)"
             imgs = re.findall(imgs_re, passage.text)
             action_re = r"\(action:\s*\"[^\(\)]*\"\s*\)"
@@ -118,16 +118,18 @@ def translate_raw_scenario(raw, old=False):
         tr.attrib['next'] = state_menu_name
         for action in actions:
             tr.attrib['action'] = action
-        tr.attrib["pending_keyboard"] = ','.join([x.split(":")[1] if ":" in x else x for x in keys])
+        tr.attrib["pending_keyboard"] = ','.join([x[0] for x in keys])
         tr.text = text
         state_intro.append(tr)
 
         # Process keys
         for key in keys:
+            if len(key) != 2:
+                raise Exception("Illegal key text: {key}".format(key=str(key)))
             tr = etree.Element('transition')
             tr.attrib["no_stop"] = "true"
-            tr.attrib["input"] = key.split(":")[1] if ":" in key else key
-            tr.attrib["next"] = get_state_intro_name(key)
+            tr.attrib["input"] = key[0]
+            tr.attrib["next"] = get_state_intro_name(key[1])
             state_menu.append(tr)
 
         # Process *
