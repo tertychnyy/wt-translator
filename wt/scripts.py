@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+import random
 import re
+import string
 
 from chatfirst.client import Chatfirst
 from chatfirst.models import Bot
@@ -47,6 +49,48 @@ def get_state_intro_name(s):
 
 def get_state_menu_name(s):
     return get_state_name(s, "Menu")
+
+
+def get_chain(input_text, next_state, no_stop="false"):
+    """
+    Create chain from input phrase
+    :param input_text:
+    :param next_state:
+    :param no_stop:
+    :return: chain states
+    """
+    states = list()
+    chain_tag = ''.join(random.choice(string.ascii_uppercase) for _ in range(10))
+
+    words = input_text.split()
+
+    # Process words in phrase
+    for i in xrange(1, len(words)):
+        state = etree.Element('state')
+        state.attrib['name'] = chain_tag + str(i)
+        state_tr = etree.Element('transition')
+        state_tr.attrib['input'] = words[i]
+        if i != len(words)-1:
+            state_tr.attrib['no_stop'] = 'true'
+            state_tr.attrib['next'] = chain_tag + str(i+1)
+        else:
+            # Transition from last state of chain to target state
+            state_tr.attrib['no_stop'] = no_stop
+            state_tr.attrib['next'] = next_state
+
+        state.append(state_tr)
+        states.append(state)
+
+    # Prepare start transition
+    tr = etree.Element('transition')
+    tr.attrib["no_stop"] = "true"
+    tr.attrib["input"] = words[0]
+    if len(states) > 0:
+        tr.attrib["next"] = states[0].attrib['name']
+    else:
+        tr.attrib["next"] = next_state
+
+    return states, tr
 
 
 def translate_raw_scenario(raw, old=False):
@@ -126,11 +170,10 @@ def translate_raw_scenario(raw, old=False):
         for key in keys:
             if len(key) != 2:
                 raise Exception("Illegal key text: {key}".format(key=str(key)))
-            tr = etree.Element('transition')
-            tr.attrib["no_stop"] = "true"
-            tr.attrib["input"] = key[0]
-            tr.attrib["next"] = get_state_intro_name(key[1])
-            state_menu.append(tr)
+            chain_states, first_tr = get_chain(key[0], get_state_intro_name(key[1]), no_stop="true")
+            state_menu.append(first_tr)
+            for state in chain_states:
+                res_xml.append(state)
 
         # Process *
         tr = etree.Element('transition')
