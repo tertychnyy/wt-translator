@@ -132,7 +132,7 @@ def translate_raw_scenario(raw, old=False):
             ## Remove used matches
             # Remove keys
             for i in xrange(len(keys_matches)):
-                text = text.replace(keys_matches[i], keys[i][0])
+                text = text.replace(keys_matches[i], "*" + str(keys[i][0]) + "*")
 
             # Remove actions
             text = re.sub(action_re, "", text)
