@@ -122,16 +122,22 @@ def translate_raw_scenario(raw, old=False):
         # Find special data
         if text:
             keys_re = r"\[\[[^\[\]]*\]\]"
-            keys = [x[2:-2] for x in re.findall(keys_re, passage.text)]
-            keys = [x.split("->") for x in keys]
+            keys_matches = re.findall(keys_re, passage.text)
+            keys = [x[2:-2].split("->") for x in keys_matches]
             imgs_re = r"\(open-url:\s*\"[^\(\)]*\"\s*\)"
             imgs = re.findall(imgs_re, passage.text)
             action_re = r"\(action:\s*\"[^\(\)]*\"\s*\)"
             actions = [x[10:-2] for x in re.findall(action_re, passage.text)]
 
-            # Remove used matches
-            text = re.sub(keys_re, "", text)
+            ## Remove used matches
+            # Remove keys
+            for i in xrange(len(keys_matches)):
+                text = text.replace(keys_matches[i], keys[i][0])
+
+            # Remove actions
             text = re.sub(action_re, "", text)
+
+            # Remove images
             for img in imgs:
                 # [12:-2]
                 text = text.replace(img, " ===" + img[12:-2] + "=== ")
